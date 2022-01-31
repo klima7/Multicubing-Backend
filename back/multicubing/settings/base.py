@@ -14,9 +14,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'index',
-    'api',
-    'todos'
+    'multicubing.apps.index',
+    'multicubing.apps.api',
+    'multicubing.apps.todos'
 ]
 
 MIDDLEWARE = [

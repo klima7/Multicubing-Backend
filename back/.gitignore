@@ -1,5 +1,6 @@
 venv/
 .idea/
+tmp/
 db.sqlite3
 __pycache__/
 *.py[cod]
