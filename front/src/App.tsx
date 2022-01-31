@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 function App() {
   return (
@@ -18,9 +19,18 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={performRequest}>Perform request</button>
       </header>
     </div>
   );
+}
+
+function performRequest() {
+  axios.get(`http://127.0.0.1:8000/api/todos/`)
+  .then(res => {
+    const persons = res.data;
+    console.log(persons);
+  })
 }
 
 export default App;
