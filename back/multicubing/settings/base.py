@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'multicubing.apps.account',
     'multicubing.apps.index',
     'multicubing.apps.api',
     'multicubing.apps.todos'
@@ -86,3 +87,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+TIME_ZONE = 'Europe/Warsaw'
+
+AUTH_USER_MODEL = 'account.Account'
