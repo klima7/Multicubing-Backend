@@ -90,9 +90,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
 TIME_ZONE = 'Europe/Warsaw'
 
 AUTH_USER_MODEL = 'account.Account'
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        },
+    },
+    'LOGIN_URL': '/auth/login/',
+    'LOGOUT_URL': '/auth/logout/',
+}
