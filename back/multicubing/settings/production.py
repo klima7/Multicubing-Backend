@@ -11,4 +11,4 @@ CORS_ALLOWED_ORIGINS = [
 # Log everything as in debug mode
 DEFAULT_LOGGING['handlers']['console']['filters'] = []
 
-django_heroku.settings(locals(), databases=True)
+django_heroku.settings(locals(), staticfiles=False)

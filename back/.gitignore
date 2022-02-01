@@ -1,6 +1,7 @@
 venv/
 .idea/
 tmp/
+staticfiles/
 db.sqlite3
 __pycache__/
 *.py[cod]
