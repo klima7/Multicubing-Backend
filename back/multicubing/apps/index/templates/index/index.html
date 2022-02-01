@@ -6,7 +6,9 @@
 </head>
 <body>
     <span style="color: green;">●</span> Backend running <br />
+    <a href="/api">API</a>,
     <a href="{% url 'admin:index' %}">Admin</a>,
-    <a href="/api">API</a>
+    <a href="{% url 'docs:swagger-ui' %}">Swagger</a>,
+    <a href="{% url 'docs:redoc-ui' %}">Redoc</a>
 </body>
 </html>

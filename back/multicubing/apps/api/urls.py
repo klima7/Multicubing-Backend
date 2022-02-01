@@ -6,4 +6,6 @@ router = DefaultRouter()
 router.registry.extend(todos_router.registry)
 router.registry.extend(account_router.registry)
 
+app_name = 'api'
+
 urlpatterns = router.urls

@@ -15,8 +15,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'drf_yasg',
     'multicubing.apps.account',
     'multicubing.apps.index',
+    'multicubing.apps.docs',
     'multicubing.apps.api',
     'multicubing.apps.todos'
 ]
