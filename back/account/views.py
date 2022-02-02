@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authtoken.models import Token
@@ -18,15 +18,14 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['POST'])
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
-        data = {}
-        if serializer.is_valid():
-            account = serializer.save()
-            data['response'] = 'successfully registered a new user.'
-            data['email'] = account.email
-            data['username'] = account.username
-        else:
-            data = serializer.errors
-        return Response(data)
+        serializer.is_valid(raise_exception=True)
+        account = serializer.save()
+        data = {
+            'response': 'successfully registered a new user.',
+            'email': account.email,
+            'username': account.username
+        }
+        return Response(data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(request_body=LoginSerializer, responses={201: None}, security=[])
     @action(detail=False, methods=['POST'])

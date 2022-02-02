@@ -4,6 +4,9 @@ from django.db.models import Q
 from .models import Account
 
 
+MIN_USERNAME_LENGTH = 5
+
+
 class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -19,6 +22,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+    def validate_username(self, username):
+        if len(username) < MIN_USERNAME_LENGTH or '@' in username:
+            raise serializers.ValidationError(f"Minimum username length is {MIN_USERNAME_LENGTH}")
+        return username
 
 
 class LoginSerializer(serializers.Serializer):
