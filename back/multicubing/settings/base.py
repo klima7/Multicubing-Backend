@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'multicubing.apps.index',
     'multicubing.apps.docs',
     'multicubing.apps.api',
-    'multicubing.apps.todos'
 ]
 
 MIDDLEWARE = [
