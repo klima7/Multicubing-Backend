@@ -5,13 +5,15 @@ from drf_yasg.utils import swagger_auto_schema
 
 from .models import Account
 from .serializers import AccountSerializer, RegistrationSerializer
+from multicubing.permissions import AuthenticatedExceptActions
 
 
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+    permission_classes = [AuthenticatedExceptActions('register')]
 
-    @swagger_auto_schema(request_body=RegistrationSerializer, responses={201: None})
+    @swagger_auto_schema(request_body=RegistrationSerializer, responses={201: None}, security=[])
     @action(detail=False, methods=['POST'])
     def register(self, request):
         serializer = RegistrationSerializer(data=request.data)
