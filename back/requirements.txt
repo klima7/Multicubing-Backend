@@ -1,3 +1,2 @@
-# Requirements for production deploy
-# Other requirements may be found in requirements directory
--r requirements/production.txt
+-r requirements_dev.txt
+gunicorn==20.1.0

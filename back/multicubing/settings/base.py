@@ -17,10 +17,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'drf_yasg',
-    'multicubing.apps.account',
-    'multicubing.apps.index',
-    'multicubing.apps.docs',
-    'multicubing.apps.api',
+    'account',
+    'index',
+    'docs',
+    'api',
 ]
 
 MIDDLEWARE = [
