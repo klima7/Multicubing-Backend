@@ -5,7 +5,7 @@ from django.utils.log import DEFAULT_LOGGING
 DEBUG = False
 
 CORS_ALLOWED_ORIGINS = [
-    'https://multicubing-backend.herokuapp.com' 
+    'https://multicubing.herokuapp.com'
 ]
 
 # Log everything as in debug mode
