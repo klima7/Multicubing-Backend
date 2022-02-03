@@ -1,3 +1,3 @@
-# Multicubing 
+# Multicubing Backend
 
-Web application to enable speedcubers to solve together, but online!
+Enable speedcubers to solve together, but online!

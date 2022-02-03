@@ -4,21 +4,8 @@ on:
     branches:
       - master
 jobs:
-  deploy-frontend:
-    name: Frontend Heroku Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: deploy to heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "multicubing"
-          heroku_email: "ukasz.klimkiewicz@gmail.com"
-          appdir: "front"
-  deploy-backend:
-    name: Backend Heroku deploy
+  deploy:
+    name: Deploy to Heroku
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,5 +14,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "multicubing-backend"
           heroku_email: "ukasz.klimkiewicz@gmail.com"
-          appdir: "back"
   
