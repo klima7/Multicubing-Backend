@@ -19,7 +19,8 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        account = serializer.save()
+        data = serializer.validated_data
+        account = Account.objects.create_user(data['email'], data['username'], data['password'])
         data = {
             'response': 'successfully registered a new user.',
             'email': account.email,
