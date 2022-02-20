@@ -46,8 +46,9 @@ class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     @swagger_auto_schema(request_body=LoginSerializer, responses={201: None}, security=[])
     @action(detail=False, methods=['POST'])
     def login(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        account = serializer.validated_data['account']
-        token, created = Token.objects.get_or_create(user=account)
-        return Response({'token': token.key})
+        login_serializer = LoginSerializer(data=request.data)
+        login_serializer.is_valid(raise_exception=True)
+        account = login_serializer.validated_data['account']
+        token, _ = Token.objects.get_or_create(user=account)
+        account_serializer = AccountSerializer(account)
+        return Response({'token': token.key, 'account': account_serializer.data})
