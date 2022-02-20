@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.authtoken.models import Token
@@ -9,7 +9,7 @@ from .serializers import AccountSerializer, RegisterSerializer, LoginSerializer
 from multicubing.permissions import AuthenticatedExceptActions
 
 
-class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
     permission_classes = [AuthenticatedExceptActions('register', 'login')]
