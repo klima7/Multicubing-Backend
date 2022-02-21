@@ -13,19 +13,20 @@ from multicubing.permissions import AuthenticatedExceptActions
 
 
 @method_decorator(name='retrieve', decorator=swagger_auto_schema(
-    manual_parameters=[openapi.Parameter('id', openapi.IN_PATH, description="primary key or 'current'", type=openapi.TYPE_STRING)]
+    manual_parameters=[openapi.Parameter('id', openapi.IN_PATH, description="primary key or 'me'", type=openapi.TYPE_STRING)]
 ))
 class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
+    lookup_field = 'username'
     permission_classes = [AuthenticatedExceptActions('register', 'login')]
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        pk = self.kwargs.get('pk')
-        if pk == "current":
-            pk = self.request.user.pk
-        obj = get_object_or_404(queryset, pk=pk)
+        username = self.kwargs.get('username')
+        if username == "me":
+            username = self.request.user.username
+        obj = get_object_or_404(queryset, username=username)
         self.check_object_permissions(self.request, obj)
         return obj
 
