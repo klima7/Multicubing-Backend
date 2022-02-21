@@ -12,9 +12,6 @@ from .serializers import AccountSerializer, RegisterSerializer, LoginSerializer
 from multicubing.permissions import AuthenticatedExceptActions
 
 
-@method_decorator(name='retrieve', decorator=swagger_auto_schema(
-    manual_parameters=[openapi.Parameter('id', openapi.IN_PATH, description="primary key or 'me'", type=openapi.TYPE_STRING)]
-))
 class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()

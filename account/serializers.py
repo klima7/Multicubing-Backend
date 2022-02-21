@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, fields
 from django.db.models import Q
 
 from .models import Account
@@ -11,7 +11,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['email', 'username']
+        fields = ['email', 'username', 'date_joined']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
