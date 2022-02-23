@@ -1,0 +1,26 @@
+[
+  {
+    "model": "cube.Cube",
+    "fields": {
+      "identifier": "two"
+    }
+  },
+  {
+    "model": "cube.Cube",
+    "fields": {
+      "identifier": "three"
+    }
+  },
+  {
+    "model": "cube.Cube",
+    "fields": {
+      "identifier": "four"
+    }
+  },
+  {
+    "model": "cube.Cube",
+    "fields": {
+      "identifier": "five"
+    }
+  }
+]

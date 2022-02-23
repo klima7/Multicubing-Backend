@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'account',
+    'cube',
     'index',
     'docs',
     'api',
