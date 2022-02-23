@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'account',
     'cube',
+    'room',
     'index',
     'docs',
     'api',
