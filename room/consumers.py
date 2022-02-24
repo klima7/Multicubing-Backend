@@ -1,15 +1,21 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from account.models import Account
 from channels.auth import login, logout
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print('Connected', self.scope["user"])
-        await self.accept()
+        authenticated = isinstance(self.scope["user"], Account)
+        if authenticated:
+            await self.accept()
+            print('Connected', self.scope["user"])
+        else:
+            await self.close()
+            print('Closed')
 
     async def disconnect(self, close_code):
-        await logout(self.scope)
+        # await logout(self.scope)
         print('Disconnect', self.scope["user"])
 
     # Receive message from WebSocket
