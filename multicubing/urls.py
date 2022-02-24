@@ -14,3 +14,7 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls')),
     path('docs/', include(docs_urls)),
 ]
+
+websocket_urlpatterns = [
+
+]

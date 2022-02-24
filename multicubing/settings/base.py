@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'drf_yasg',
+    'channels',
     'account',
     'cube',
     'room',
@@ -57,6 +58,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'multicubing.wsgi.application'
+ASGI_APPLICATION = 'multicubing.asgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

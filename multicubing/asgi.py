@@ -1,6 +1,19 @@
-from multicubing.settings import setup_settings
+import os
 
-from django.core.asgi import get_asgi_application
+import django
+from channels.http import AsgiHandler
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from multicubing.urls import websocket_urlpatterns
 
-setup_settings()
-application = get_asgi_application()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'channel.settings')
+django.setup()
+
+application = ProtocolTypeRouter({
+    "http": AsgiHandler(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            websocket_urlpatterns
+        )
+    )
+})
