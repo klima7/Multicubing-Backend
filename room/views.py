@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from api.utils import ErrorResponse
 
 
-class RoomViewSet(viewsets.GenericViewSet):
+class RoomViewSet(viewsets.ViewSet):
 
     def create(self, request):
         serializer = RoomCreateSerializer(data=request.data)
