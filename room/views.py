@@ -1,3 +1,28 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import RoomCreateSerializer
+from .models import Room
+from cube.models import Cube
+from django.utils.text import slugify
+from rest_framework.exceptions import ValidationError
+from api.utils import ErrorResponse
 
-# Create your views here.
+
+class RoomViewSet(viewsets.GenericViewSet):
+
+    def create(self, request):
+        serializer = RoomCreateSerializer(data=request.data)
+        # try:
+        serializer.is_valid(raise_exception=True)
+        # except ValidationError as e:
+        #     return ErrorResponse(status=status.HTTP_400_BAD_REQUEST, error='invalid-data', details=e.args[0])
+        data = serializer.validated_data
+        slug = slugify(data['name'])
+        exists = Room.objects.filter(slug=slug).exists()
+        if exists:
+            return ErrorResponse(status=status.HTTP_409_CONFLICT, error='name-taken')
+        cube = Cube.objects.get(identifier=data['cube'])
+        room = Room(name=data['name'], description=data['description'], slug=slug, password=data['password'], cube=cube)
+        room.save()
+        return Response(status=status.HTTP_201_CREATED)

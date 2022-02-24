@@ -3,7 +3,8 @@ from .models import Room
 
 
 class RoomAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
+    pass
+    # exclude = ('slug',)
 
 
 admin.site.register(Room, RoomAdmin)
