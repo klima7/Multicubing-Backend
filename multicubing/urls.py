@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from api import urls as api_urls
 from docs import urls as docs_urls
+from room import consumers
 
 handler500 = 'rest_framework.exceptions.server_error'
 
@@ -16,5 +17,5 @@ urlpatterns = [
 ]
 
 websocket_urlpatterns = [
-
+    path(r'ws/rooms/<room_name>/', consumers.ChatConsumer.as_asgi())
 ]
