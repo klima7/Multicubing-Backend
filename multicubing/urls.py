@@ -1,8 +1,9 @@
+from channels.routing import URLRouter
 from django.contrib import admin
 from django.urls import path, include
 from api import urls as api_urls
 from docs import urls as docs_urls
-from room import consumers
+from room.urls import ws_urlpatterns as room_ws_urlpatterns
 
 handler500 = 'rest_framework.exceptions.server_error'
 
@@ -16,6 +17,6 @@ urlpatterns = [
     path('docs/', include(docs_urls)),
 ]
 
-websocket_urlpatterns = [
-    path(r'ws/rooms/<room_name>/', consumers.ChatConsumer.as_asgi())
+ws_urlpatterns = [
+    path('rooms/', URLRouter(room_ws_urlpatterns)),
 ]
