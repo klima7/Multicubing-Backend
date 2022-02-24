@@ -11,5 +11,5 @@ def custom_exception_handler(exc, context):
             error='invalid-data',
             details=exc.args[0]
         )
-
+    print(exc)
     return exception_handler(exc, context)

@@ -2,7 +2,7 @@ from .base import *
 import django_heroku
 from django.utils.log import DEFAULT_LOGGING
 
-DEBUG = False
+DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
     'https://multicubing.herokuapp.com'

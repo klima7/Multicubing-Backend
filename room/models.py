@@ -6,6 +6,9 @@ from django.core.validators import MinLengthValidator
 
 class Room(models.Model):
 
+    class Meta:
+        ordering = ('creation_date',)
+
     name = models.CharField(max_length=25, unique=True, validators=[MinLengthValidator(3)])
     slug = models.SlugField(unique=True, blank=True)
     description = models.CharField(max_length=100, null=True, blank=True)

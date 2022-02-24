@@ -10,3 +10,9 @@ class RoomCreateSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=100, allow_null=True)
     password = serializers.CharField(max_length=25, allow_null=True, validators=[MinLengthValidator(3)])
     cube = serializers.CharField(max_length=100, validators=[CubeValidator()])
+
+
+class RoomReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('name', 'description', 'password', 'cube')
