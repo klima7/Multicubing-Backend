@@ -15,7 +15,7 @@ class RoomReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'description', 'cube', 'private', 'creation_date')
+        fields = ('name', 'slug', 'description', 'cube', 'private', 'creation_date')
 
     cube = serializers.SlugRelatedField(read_only=True, slug_field='identifier')
     private = serializers.SerializerMethodField()
