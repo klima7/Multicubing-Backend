@@ -117,3 +117,12 @@ SWAGGER_SETTINGS = {
     'LOGIN_URL': '/auth/login/',
     'LOGOUT_URL': '/auth/logout/',
 }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

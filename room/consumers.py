@@ -1,26 +1,34 @@
 import json
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import JsonWebsocketConsumer
 from account.models import Account
+from asgiref.sync import async_to_sync
 from channels.auth import login, logout
+from django.db.models.signals import pre_save
 
 
-class ChatConsumer(WebsocketConsumer):
+class ChatConsumer(JsonWebsocketConsumer):
     def connect(self):
         authenticated = isinstance(self.scope["user"], Account)
-        if authenticated:
-            self.accept()
-            print('Connected', self.scope["user"])
-        else:
+
+        if not authenticated:
             self.close()
             print('Closed')
+
+        self.accept()
+        print('Connected', self.scope["user"])
+
+        async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
+
+        # print('Channel', self.channel_name)
+        # self.send_json({'type': 'test'})
 
     def disconnect(self, close_code):
         # await logout(self.scope)
         print('Disconnect', self.scope["user"])
+        async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
 
     # Receive message from WebSocket
-    def receive(self, text_data):
-        text_data_json = json.loads(text_data)
+    def receive(self, text_data_json):
         message = text_data_json['message']
 
         # Send message to room group
@@ -31,6 +39,14 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message
             }
         )
+
+    def rooms_created(self, event):
+        print('rooms_added', event)
+        data = {
+            'type': 'rooms.added',
+            'room': event["room"]
+        }
+        self.send_json(data)
 
     # Receive message from room group
     def chat_message(self, event):
