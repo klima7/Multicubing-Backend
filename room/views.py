@@ -6,8 +6,6 @@ from .models import Room
 from cube.models import Cube
 from django.utils.text import slugify
 from api.utils import ErrorResponse
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
 
 class RoomViewSet(viewsets.ViewSet):
@@ -25,8 +23,6 @@ class RoomViewSet(viewsets.ViewSet):
         room.save()
 
         read_serializer = RoomReadSerializer(room)
-
-        async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.created", "room": serializer.data})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
