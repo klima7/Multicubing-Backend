@@ -2,9 +2,10 @@ from django.db import models
 from cube.models import Cube
 from django.utils import timezone
 from django.core.validators import MinLengthValidator
+from multicubing.signals import SaveDoneSignalMixin
 
 
-class Room(models.Model):
+class Room(SaveDoneSignalMixin, models.Model):
 
     class Meta:
         ordering = ('creation_date',)

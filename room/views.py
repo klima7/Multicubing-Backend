@@ -23,7 +23,7 @@ class RoomViewSet(viewsets.ViewSet):
         room.save()
 
         read_serializer = RoomReadSerializer(room)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(read_serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request):
         rooms = Room.objects.all()

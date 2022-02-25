@@ -6,4 +6,4 @@ class RoomConfig(AppConfig):
     name = 'room'
 
     def ready(self):
-        from .signals import room_pre_save
+        from .signals import notify_room_update
