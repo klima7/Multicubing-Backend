@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn multicubing.wsgi --log-file -
+web: daphne -p $PORT --bind 0.0.0.0 multicubing.asgi:application
