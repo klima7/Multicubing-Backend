@@ -4,7 +4,6 @@ import django
 from channels.http import AsgiHandler
 from django.urls import path
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
 from .urls import ws_urlpatterns
 from .middleware import TokenAuthMiddleware
 
