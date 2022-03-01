@@ -6,7 +6,11 @@ from .base import *
 DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
-    'https://multicubing.herokuapp.com'
+    'https://multicubing.herokuapp.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://multicubing-backend.herokuapp.com',
 ]
 
 CHANNEL_LAYERS['default']['CONFIG']['hosts'] = [os.environ.get('REDIS_URL')]
