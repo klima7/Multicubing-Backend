@@ -1,16 +1,18 @@
-from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import RoomCreateSerializer, RoomReadSerializer
-from .models import Room
+from rest_framework.views import APIView
 from cube.models import Cube
 from django.utils.text import slugify
 from api.utils import ErrorResponse
+from drf_yasg.utils import swagger_auto_schema
+from django.shortcuts import get_object_or_404
+from .serializers import RoomCreateSerializer, RoomReadSerializer, PermitSerializer
+from .models import Room, Permit
 
 
-class RoomViewSet(viewsets.ViewSet):
+class RoomsView(APIView):
 
-    def create(self, request):
+    def post(self, request):
         serializer = RoomCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
@@ -25,7 +27,31 @@ class RoomViewSet(viewsets.ViewSet):
         read_serializer = RoomReadSerializer(room)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)
 
-    def list(self, request):
+    def get(self, request):
         rooms = Room.objects.all()
         serializer = RoomReadSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class PermitsView(APIView):
+
+    def get(self, request, room_slug):
+        account = request.user
+        get_object_or_404(Room, slug=room_slug)
+        permit = Permit.objects.filter(account=account, room__slug=room_slug).first() is not None
+        return Response({'permit': permit}, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(request_body=PermitSerializer)
+    def post(self, request, room_slug):
+        room = get_object_or_404(Room, slug=room_slug)
+        serializer = PermitSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = serializer.validated_data['password']
+        if room.password == password:
+            existing = Permit.objects.filter(account=request.user, room=room).first()
+            if not existing:
+                permit = Permit(account=request.user, room=room)
+                permit.save()
+            return Response({})
+        else:
+            return ErrorResponse('invalid-password', status=401)

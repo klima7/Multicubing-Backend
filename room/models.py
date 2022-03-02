@@ -3,6 +3,7 @@ from cube.models import Cube
 from django.utils import timezone
 from django.core.validators import MinLengthValidator
 from multicubing.signals import SaveDoneSignalMixin
+from account.models import Account
 
 
 class Room(SaveDoneSignalMixin, models.Model):
@@ -19,3 +20,14 @@ class Room(SaveDoneSignalMixin, models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Participant(models.Model):
+    status = models.CharField(max_length=25)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+
+class Permit(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)

@@ -22,3 +22,7 @@ class RoomReadSerializer(serializers.ModelSerializer):
 
     def get_private(self, obj):
         return obj.password is not None
+
+
+class PermitSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=25)

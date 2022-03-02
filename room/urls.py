@@ -1,10 +1,11 @@
-from rest_framework.routers import SimpleRouter
 from django.urls import path
-from .views import RoomViewSet
+from .views import RoomsView, PermitsView
 from . import consumers
 
-router = SimpleRouter()
-router.register('rooms', RoomViewSet, basename='Account')
+urlpatterns = [
+    path('rooms/', RoomsView.as_view()),
+    path('rooms/<room_slug>/permit', PermitsView.as_view()),
+]
 
 ws_urlpatterns = [
     path(r'', consumers.ChatConsumer.as_asgi())
