@@ -5,9 +5,9 @@ from api import urls as api_urls
 from docs import urls as docs_urls
 from room.urls import ws_urlpatterns as room_ws_urlpatterns
 
-handler500 = 'rest_framework.exceptions.server_error'
+handler500 = 'multicubing.exceptions.custom_500_exception_handler'
 
-handler400 = 'rest_framework.exceptions.bad_request'
+handler400 = 'multicubing.exceptions.custom_400_exception_handler'
 
 urlpatterns = [
     path('', include('index.urls')),

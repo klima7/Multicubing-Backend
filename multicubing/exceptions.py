@@ -1,6 +1,6 @@
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError
-from django.http.response import Http404
+from django.http.response import Http404, JsonResponse
 from rest_framework import status
 from api.utils import ErrorResponse
 
@@ -20,8 +20,11 @@ def custom_exception_handler(exc, context):
     return exception_handler(exc, context)
 
 
-def custom_404_exception_handler(exc, context):
-    return ErrorResponse(
-        status=status.HTTP_400_BAD_REQUEST,
-        error='not-found',
-    )
+def custom_500_exception_handler(request):
+    data = {'error': 'server-error'}
+    return JsonResponse(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def custom_400_exception_handler(request, exception):
+    data = {'error': 'bad-request'}
+    return JsonResponse(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
