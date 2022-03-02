@@ -36,9 +36,11 @@ class RoomsView(APIView):
 class PermitsView(APIView):
 
     def get(self, request, room_slug):
+        permit = True
         account = request.user
-        get_object_or_404(Room, slug=room_slug)
-        permit = Permit.objects.filter(account=account, room__slug=room_slug).first() is not None
+        room = get_object_or_404(Room, slug=room_slug)
+        if room.password is not None:
+            permit = Permit.objects.filter(account=account, room__slug=room_slug).first() is not None
         return Response({'permit': permit}, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=PermitSerializer)

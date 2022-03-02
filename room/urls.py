@@ -4,7 +4,7 @@ from . import consumers
 
 urlpatterns = [
     path('rooms/', RoomsView.as_view()),
-    path('rooms/<room_slug>/permit', PermitsView.as_view()),
+    path('rooms/<room_slug>/permit/', PermitsView.as_view()),
 ]
 
 ws_urlpatterns = [
