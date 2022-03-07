@@ -1,33 +1,32 @@
-import json
 from channels.generic.websocket import JsonWebsocketConsumer
 from account.models import Account
-from asgiref.sync import async_to_sync
-from channels.auth import login, logout
-from django.db.models.signals import pre_save
+from channels_presence.models import Room
+from channels_presence.decorators import touch_presence
 
 
 class ChatConsumer(JsonWebsocketConsumer):
+
     def connect(self):
-        authenticated = isinstance(self.scope["user"], Account)
+        user = self.scope["user"]
+        authenticated = isinstance(user, Account)
 
         if not authenticated:
             self.close()
             print('Closed')
 
         self.accept()
-        print('Connected', self.scope["user"])
+        print('Connected', user)
 
-        async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
-
-        # print('Channel', self.channel_name)
-        # self.send_json({'type': 'test'})
+        Room.objects.add("rooms", self.channel_name, user)
+        # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
 
     def disconnect(self, close_code):
-        # await logout(self.scope)
         print('Disconnect', self.scope["user"])
-        async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
+        Room.objects.remove("rooms", self.channel_name)
+        # async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
 
     # Receive message from WebSocket
+    @touch_presence
     def receive(self, text_data_json):
         message = text_data_json['message']
 

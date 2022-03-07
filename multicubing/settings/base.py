@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'channels',
+    'channels_presence',
     'account',
     'cube',
     'room',
