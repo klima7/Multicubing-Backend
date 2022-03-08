@@ -4,6 +4,30 @@ from channels_presence.models import Room
 from channels_presence.decorators import touch_presence
 
 
+class RoomConsumer(JsonWebsocketConsumer):
+
+    def connect(self):
+        user = self.scope["user"]
+        print(self.scope)
+        room_slug = self.scope['url_route']['kwargs']['room_slug']
+        authenticated = isinstance(user, Account)
+
+        if not authenticated:
+            self.close()
+            print('Room closed')
+
+        self.accept()
+        print('User', user, 'connected to', room_slug)
+
+        Room.objects.add(f'rooms.{room_slug}', self.channel_name, user)
+        # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
+
+    def disconnect(self, close_code):
+        room_slug = self.scope['url_path']['kwargs']['room_slug']
+        print('User', self.scope["user"], 'disconnected from', room_slug)
+        Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
+
+
 class ChatConsumer(JsonWebsocketConsumer):
 
     def connect(self):
