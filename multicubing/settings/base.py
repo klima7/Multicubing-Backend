@@ -127,3 +127,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+CELERY_TIMEZONE = 'Europe/Warsaw'
+CELERY_TASK_TRACK_STARTED = True
