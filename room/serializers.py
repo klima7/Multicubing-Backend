@@ -1,5 +1,7 @@
-from rest_framework import serializers, fields
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from rest_framework import serializers
+from django.core.validators import MinLengthValidator
+from django.shortcuts import get_object_or_404
+from channels_presence.models import Room as PresenceRoom
 from .models import Room
 from cube.validators import CubeValidator
 
@@ -15,13 +17,18 @@ class RoomReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('name', 'slug', 'description', 'cube', 'private', 'creation_date')
+        fields = ('name', 'slug', 'description', 'cube', 'private', 'count', 'creation_date')
 
     cube = serializers.SlugRelatedField(read_only=True, slug_field='identifier')
     private = serializers.SerializerMethodField()
+    count = serializers.SerializerMethodField()
 
     def get_private(self, obj):
         return obj.password is not None
+
+    def get_count(self, obj):
+        room = get_object_or_404(PresenceRoom, channel_name="rooms")
+        return len(room.get_users())
 
 
 class PermitSerializer(serializers.Serializer):
