@@ -36,10 +36,7 @@ def send_room_updated(room_slug):
 
 
 def send_room_deleted(room_slug):
-    room = Room.objects.filter(slug=room_slug).first()
-    if room is None:
-        return
-    async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.deleted", "slug": room.slug})
+    async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.deleted", "slug": room_slug})
 
 
 def send_rooms_refresh():
