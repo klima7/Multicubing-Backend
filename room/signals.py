@@ -25,6 +25,8 @@ def broadcast_presence(sender, room, added, removed, bulk_change, **kwargs):
         send_room_updated(room_slug)
     elif removed:
         send_room_deleted(room_slug)
+    elif bulk_change:
+        send_rooms_refresh()
 
 
 def send_room_updated(room_slug):
@@ -40,3 +42,7 @@ def send_room_deleted(room_slug):
     if room is None:
         return
     async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.deleted", "slug": room.slug})
+
+
+def send_rooms_refresh():
+    async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.refresh"})

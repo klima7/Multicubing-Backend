@@ -78,3 +78,10 @@ class ChatConsumer(JsonWebsocketConsumer):
             'slug': event["slug"]
         }
         self.send_json(data)
+
+    def rooms_refresh(self, event):
+        print('rooms_deleted', event)
+        data = {
+            'type': 'rooms.refresh',
+        }
+        self.send_json(data)
