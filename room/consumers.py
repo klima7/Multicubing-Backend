@@ -23,7 +23,7 @@ class RoomConsumer(JsonWebsocketConsumer):
         # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
 
     def disconnect(self, close_code):
-        room_slug = self.scope['url_path']['kwargs']['room_slug']
+        room_slug = self.scope['url_route']['kwargs']['room_slug']
         print('User', self.scope["user"], 'disconnected from', room_slug)
         Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
 

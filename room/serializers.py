@@ -23,11 +23,13 @@ class RoomReadSerializer(serializers.ModelSerializer):
     private = serializers.SerializerMethodField()
     count = serializers.SerializerMethodField()
 
-    def get_private(self, obj):
-        return obj.password is not None
+    def get_private(self, room):
+        return room.password is not None
 
-    def get_count(self, obj):
-        room = get_object_or_404(PresenceRoom, channel_name="rooms")
+    def get_count(self, room):
+        room = PresenceRoom.objects.filter(channel_name=f'rooms.{room.slug}').first()
+        if room is None:
+            return 0
         return len(room.get_users())
 
 
