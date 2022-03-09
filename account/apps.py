@@ -6,4 +6,4 @@ class AccountConfig(AppConfig):
     name = 'account'
 
     def ready(self):
-        from .signals import create_auth_token
+        from .signals import create_auth_token, update_active

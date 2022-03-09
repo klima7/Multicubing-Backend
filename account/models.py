@@ -39,6 +39,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', default=timezone.now)
     last_login = models.DateTimeField(verbose_name='last login', default=timezone.now)
+    last_active = models.DateTimeField(verbose_name='last active', default=timezone.now)
+    active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -51,3 +53,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def touch_active(self):
+        self.last_active = timezone.now()
