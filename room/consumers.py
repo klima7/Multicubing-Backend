@@ -49,19 +49,9 @@ class ChatConsumer(JsonWebsocketConsumer):
         Room.objects.remove("rooms", self.channel_name)
         # async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
 
-    # Receive message from WebSocket
     @touch_presence
-    def receive(self, text_data_json):
-        message = text_data_json['message']
-
-        # Send message to room group
-        self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+    def receive_json(self, content):
+        pass
 
     def rooms_created(self, event):
         print('rooms_added', event)

@@ -1,6 +1,6 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 from account.models import Account
-from channels_presence.models import Room
+from channels_presence.models import Room as RoomPresence
 from channels_presence.decorators import touch_presence
 
 
@@ -16,13 +16,13 @@ class AccountConsumer(JsonWebsocketConsumer):
         self.accept()
         print(f'User {user} connected')
 
-        Room.objects.add(f'account.{user.username}', self.channel_name, user)
+        RoomPresence.objects.add(f'account.{user.username}', self.channel_name, user)
 
     def disconnect(self, close_code):
         user = self.scope["user"]
         print(f'User {user} disconnected')
-        Room.objects.remove(f'account.{user.username}', self.channel_name)
+        RoomPresence.objects.remove(f'account.{user.username}', self.channel_name)
 
     @touch_presence
-    def receive(self, message):
-        print(message)
+    def receive_json(self, content):
+        pass

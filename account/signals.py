@@ -23,9 +23,5 @@ def update_active(sender, room, added, removed, bulk_change, **kwargs):
     if account is None:
         return
 
-    if added:
-        account.active = True
-    elif removed or bulk_change:
-        account.active = False
-
+    account.update_active()
     account.save()

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='account',
-            name='last_active',
+            name='',
             field=models.DateTimeField(default=django.utils.timezone.now, verbose_name='last active'),
         ),
     ]

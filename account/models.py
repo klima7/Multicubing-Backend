@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
+from channels_presence.models import Presence
 
 
 class MyAccountManager(BaseUserManager):
@@ -39,7 +40,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', default=timezone.now)
     last_login = models.DateTimeField(verbose_name='last login', default=timezone.now)
-    last_active = models.DateTimeField(verbose_name='last active', default=timezone.now)
+    last_seen = models.DateTimeField(verbose_name='last active', default=None, null=True)
     active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -54,5 +55,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-    def touch_active(self):
-        self.last_active = timezone.now()
+    def update_active(self):
+        active = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
+        self.active = active
+        self.last_seen = None if active else timezone.now()
