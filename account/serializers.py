@@ -11,7 +11,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ['email', 'username', 'date_joined']
+        fields = ['email', 'username', 'date_joined', 'active', 'last_seen']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
