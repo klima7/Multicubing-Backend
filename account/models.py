@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from channels_presence.models import Presence
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
@@ -53,6 +55,10 @@ class Account(AbstractBaseUser):
     def update_last_seen(self):
         present = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
         self.last_seen = None if present else timezone.now()
+
+    @property
+    def last_login(self):
+        return datetime.now()
 
     @property
     def is_superuser(self):
