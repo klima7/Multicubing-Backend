@@ -8,8 +8,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-REDIS_URL = 'redis://127.0.0.1:6379'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -17,8 +15,4 @@ DATABASES = {
     }
 }
 
-CHANNEL_LAYERS['default']['CONFIG']['hosts'] = [REDIS_URL]
-
-CELERY_BROKER_URL = REDIS_URL
-
-CELERY_RESULT_BACKEND = REDIS_URL
+CHANNEL_LAYERS['default']['CONFIG']['hosts'] = [('127.0.0.1', 6379)]
