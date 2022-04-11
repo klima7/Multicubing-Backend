@@ -9,6 +9,6 @@ urlpatterns = [
 ]
 
 ws_urlpatterns = [
-    path('', consumers.ChatConsumer.as_asgi()),
+    path('', consumers.RoomsConsumer.as_asgi()),
     path('<room_slug>/', consumers.RoomConsumer.as_asgi()),
 ]

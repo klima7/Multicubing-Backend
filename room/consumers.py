@@ -13,20 +13,17 @@ class RoomConsumer(JsonWebsocketConsumer):
 
         if not authenticated:
             self.close()
-            print('Room closed')
 
         self.accept()
-        print('User', user, 'connected to', room_slug)
 
         Room.objects.add(f'rooms.{room_slug}', self.channel_name, user)
-        # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
 
     def disconnect(self, close_code):
         room_slug = self.scope['url_route']['kwargs']['room_slug']
         Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
 
 
-class ChatConsumer(JsonWebsocketConsumer):
+class RoomsConsumer(JsonWebsocketConsumer):
 
     def connect(self):
         user = self.scope["user"]
@@ -34,17 +31,13 @@ class ChatConsumer(JsonWebsocketConsumer):
 
         if not authenticated:
             self.close()
-            print('Closed')
 
         self.accept()
-        print('Connected', user)
 
         Room.objects.add("rooms", self.channel_name, user)
-        # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
 
     def disconnect(self, close_code):
         Room.objects.remove("rooms", self.channel_name)
-        # async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
 
     @touch_presence
     def receive_json(self, content):
