@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'channels',
     'channels_presence',
+    'scheduler',
     'account',
     'cube',
     'room',

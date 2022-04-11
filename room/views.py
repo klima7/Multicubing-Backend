@@ -6,7 +6,7 @@ from django.utils.text import slugify
 from api.utils import ErrorResponse
 from drf_yasg.utils import swagger_auto_schema
 from django.shortcuts import get_object_or_404
-from .serializers import RoomCreateSerializer, RoomReadSerializer, PermitSerializer
+from .serializers import RoomCreateSerializer, RoomsReadSerializer, RoomReadSerializer, PermitSerializer
 from .models import Room, Permit
 
 
@@ -24,12 +24,20 @@ class RoomsView(APIView):
         room = Room(name=data['name'], description=data['description'], slug=slug, password=data['password'], cube=cube)
         room.save()
 
-        read_serializer = RoomReadSerializer(room)
+        read_serializer = RoomsReadSerializer(room)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request):
         rooms = Room.objects.all()
-        serializer = RoomReadSerializer(rooms, many=True)
+        serializer = RoomsReadSerializer(rooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RoomView(APIView):
+
+    def get(self, request, room_slug):
+        room = get_object_or_404(Room, slug=room_slug)
+        serializer = RoomReadSerializer(room)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

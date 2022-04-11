@@ -8,7 +8,6 @@ class RoomConsumer(JsonWebsocketConsumer):
 
     def connect(self):
         user = self.scope["user"]
-        print(self.scope)
         room_slug = self.scope['url_route']['kwargs']['room_slug']
         authenticated = isinstance(user, Account)
 
@@ -24,7 +23,6 @@ class RoomConsumer(JsonWebsocketConsumer):
 
     def disconnect(self, close_code):
         room_slug = self.scope['url_route']['kwargs']['room_slug']
-        print('User', self.scope["user"], 'disconnected from', room_slug)
         Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
 
 
@@ -45,7 +43,6 @@ class ChatConsumer(JsonWebsocketConsumer):
         # async_to_sync(self.channel_layer.group_add)("rooms", self.channel_name)
 
     def disconnect(self, close_code):
-        print('Disconnect', self.scope["user"])
         Room.objects.remove("rooms", self.channel_name)
         # async_to_sync(self.channel_layer.group_discard)("rooms", self.channel_name)
 

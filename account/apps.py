@@ -1,6 +1,5 @@
-import os
+import schedule
 from django.apps import AppConfig
-from .tasks import schedule_tasks
 
 
 class AccountConfig(AppConfig):
@@ -8,6 +7,11 @@ class AccountConfig(AppConfig):
     name = 'account'
 
     def ready(self):
+        schedule.every(10).seconds.do(_presence_pruning_task)
         from .signals import create_auth_token, update_active
-        if os.environ.get('RUN_MAIN', None) != 'true':
-            schedule_tasks()
+
+
+def _presence_pruning_task():
+    from channels_presence.tasks import prune_presence, prune_rooms
+    prune_presence()
+    prune_rooms()

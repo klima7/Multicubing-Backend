@@ -2,7 +2,7 @@ from multicubing.signals import save_done
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from .models import Room
-from .serializers import RoomReadSerializer
+from .serializers import RoomsReadSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from channels_presence.signals import presence_changed
@@ -31,7 +31,7 @@ def send_room_updated(room_slug):
     room = Room.objects.filter(slug=room_slug).first()
     if room is None:
         return
-    read_serializer = RoomReadSerializer(room)
+    read_serializer = RoomsReadSerializer(room)
     async_to_sync(get_channel_layer().group_send)("rooms", {"type": "rooms.created", "room": read_serializer.data})
 
 
