@@ -1,7 +1,8 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-from account.models import Account
-from channels_presence.models import Room as RoomPresence
 from channels_presence.decorators import touch_presence
+from channels_presence.models import Room as RoomPresence
+
+from account.models import Account
 
 
 class AccountConsumer(JsonWebsocketConsumer):

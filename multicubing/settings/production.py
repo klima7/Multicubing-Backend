@@ -1,6 +1,8 @@
 import os
+
 import django_heroku
 from django.utils.log import DEFAULT_LOGGING
+
 from .base import *
 
 DEBUG = True

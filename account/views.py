@@ -1,15 +1,13 @@
-from rest_framework import viewsets, status, mixins
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.authtoken.models import Token
-from drf_yasg.utils import swagger_auto_schema
 from django.shortcuts import get_object_or_404
-from django.utils.decorators import method_decorator
-from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import viewsets, status, mixins
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
+from multicubing.permissions import AuthenticatedExceptActions
 from .models import Account
 from .serializers import AccountSerializer, RegisterSerializer, LoginSerializer
-from multicubing.permissions import AuthenticatedExceptActions
 
 
 class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):

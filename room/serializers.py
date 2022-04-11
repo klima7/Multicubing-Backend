@@ -1,9 +1,9 @@
-from rest_framework import serializers
-from django.core.validators import MinLengthValidator
-from django.shortcuts import get_object_or_404
 from channels_presence.models import Room as PresenceRoom
-from .models import Room
+from django.core.validators import MinLengthValidator
+from rest_framework import serializers
+
 from cube.validators import CubeValidator
+from .models import Room
 
 
 class RoomCreateSerializer(serializers.Serializer):

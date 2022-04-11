@@ -1,5 +1,5 @@
-from rest_framework import serializers, fields
 from django.db.models import Q
+from rest_framework import serializers
 
 from .models import Account
 

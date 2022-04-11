@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
+
 from api import urls as api_urls
-from docs import urls as docs_urls
 from api.urls import ws_urlpatterns as api_ws_urlpatterns
+from docs import urls as docs_urls
 
 handler500 = 'multicubing.exceptions.custom_500_exception_handler'
 

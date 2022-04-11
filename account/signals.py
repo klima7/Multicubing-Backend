@@ -1,8 +1,10 @@
 import re
+
+from channels_presence.signals import presence_changed
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
-from channels_presence.signals import presence_changed
+
 from .models import Account
 
 

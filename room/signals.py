@@ -1,11 +1,12 @@
-from multicubing.signals import save_done
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from channels_presence.signals import presence_changed
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+
+from multicubing.signals import save_done
 from .models import Room
 from .serializers import RoomsReadSerializer
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-from channels_presence.signals import presence_changed
 
 
 @receiver(save_done, sender=Room)

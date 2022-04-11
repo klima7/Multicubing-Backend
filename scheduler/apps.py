@@ -1,7 +1,8 @@
+import logging
 import os
 import threading
 import time
-import logging
+
 import schedule
 from django.apps import AppConfig
 

@@ -1,9 +1,10 @@
 from channels.routing import URLRouter
-from rest_framework.routers import DefaultRouter
-from account.urls import router as account_router
 from django.urls import path, include
-from room.urls import ws_urlpatterns as room_ws_urlpatterns
+from rest_framework.routers import DefaultRouter
+
+from account.urls import router as account_router
 from account.urls import ws_urlpatterns as account_ws_urlpatterns
+from room.urls import ws_urlpatterns as room_ws_urlpatterns
 
 app_name = 'api'
 

@@ -1,7 +1,8 @@
 import django
-from django.urls import path
 from channels.http import AsgiHandler
 from channels.routing import ProtocolTypeRouter, URLRouter
+from django.urls import path
+
 from multicubing.settings import setup_settings
 
 setup_settings()

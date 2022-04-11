@@ -1,5 +1,6 @@
-from .models import Cube
 from django.core.exceptions import ValidationError
+
+from .models import Cube
 
 
 class CubeValidator:
