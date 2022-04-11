@@ -14,13 +14,11 @@ class AccountConsumer(JsonWebsocketConsumer):
             self.close()
 
         self.accept()
-        print(f'User {user} connected')
 
         RoomPresence.objects.add(f'account.{user.username}', self.channel_name, user)
 
     def disconnect(self, close_code):
         user = self.scope["user"]
-        print(f'User {user} disconnected')
         RoomPresence.objects.remove(f'account.{user.username}', self.channel_name)
 
     @touch_presence

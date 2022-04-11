@@ -1,10 +1,8 @@
-from channels.routing import URLRouter
 from django.contrib import admin
 from django.urls import path, include
 from api import urls as api_urls
 from docs import urls as docs_urls
-from room.urls import ws_urlpatterns as room_ws_urlpatterns
-from account.urls import ws_urlpatterns as account_ws_urlpatterns
+from api.urls import ws_urlpatterns as api_ws_urlpatterns
 
 handler500 = 'multicubing.exceptions.custom_500_exception_handler'
 
@@ -18,7 +16,4 @@ urlpatterns = [
     path('docs/', include(docs_urls)),
 ]
 
-ws_urlpatterns = [
-    path('rooms/', URLRouter(room_ws_urlpatterns)),
-    path('account/', URLRouter(account_ws_urlpatterns)),
-]
+ws_urlpatterns = api_ws_urlpatterns

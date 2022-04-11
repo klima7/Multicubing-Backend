@@ -44,7 +44,6 @@ class RoomsConsumer(JsonWebsocketConsumer):
         pass
 
     def rooms_created(self, event):
-        print('rooms_added', event)
         data = {
             'type': 'rooms.added',
             'room': event["room"]
@@ -52,7 +51,6 @@ class RoomsConsumer(JsonWebsocketConsumer):
         self.send_json(data)
 
     def rooms_deleted(self, event):
-        print('rooms_deleted', event)
         data = {
             'type': 'rooms.deleted',
             'slug': event["slug"]
@@ -60,7 +58,6 @@ class RoomsConsumer(JsonWebsocketConsumer):
         self.send_json(data)
 
     def rooms_refresh(self, event):
-        print('rooms_deleted', event)
         data = {
             'type': 'rooms.refresh',
         }
