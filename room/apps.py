@@ -6,4 +6,5 @@ class RoomConfig(AppConfig):
     name = 'room'
 
     def ready(self):
+        # noinspection PyUnresolvedReferences
         from .signals import notify_room_update

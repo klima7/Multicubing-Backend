@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from .models import Account
 
-
 MIN_USERNAME_LENGTH = 5
 
 
