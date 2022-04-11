@@ -2,7 +2,6 @@ from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 
-from account.models import Account
 from cube.models import Cube
 from multicubing.signals import SaveDoneSignalMixin
 
@@ -21,3 +20,7 @@ class Room(SaveDoneSignalMixin, models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_private(self):
+        return self.description is not None
