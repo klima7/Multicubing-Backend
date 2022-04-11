@@ -34,12 +34,12 @@ class MyAccountManager(BaseUserManager):
         return user
 
 
-class Account(AbstractBaseUser, PermissionsMixin):
+class Account(AbstractBaseUser):
 
     email = models.EmailField(verbose_name="email", max_length=60, unique=True, blank=False)
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', default=timezone.now)
-    last_seen = models.DateTimeField(verbose_name='last active', default=None, null=True)
+    last_seen = models.DateTimeField(verbose_name='last seen', default=None, null=True)
     active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
@@ -67,3 +67,21 @@ class Account(AbstractBaseUser, PermissionsMixin):
     @property
     def is_active(self):
         return True
+
+    def get_user_permissions(self, obj=None):
+        return []
+
+    def get_group_permissions(self, obj=None):
+        return []
+
+    def get_all_permissions(self, obj=None):
+        return []
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_perms(self, perm_list, obj=None):
+        return all(self.has_perm(perm, obj) for perm in perm_list)
+
+    def has_module_perms(self, app_label):
+        return self.is_admin
