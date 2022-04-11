@@ -7,12 +7,12 @@ from account.models import Account
 class AccountAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'username')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Permissions', {'fields': ('is_admin', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('date_joined',)}),
     )
 
     list_display = ('email', 'username', 'is_admin')
-    list_filter = ('is_admin', 'is_active')
+    list_filter = ('is_admin',)
     search_fields = ('username', 'email')
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions')

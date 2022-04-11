@@ -39,13 +39,9 @@ class Account(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True, blank=False)
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', default=timezone.now)
-    last_login = models.DateTimeField(verbose_name='last login', default=timezone.now)
     last_seen = models.DateTimeField(verbose_name='last active', default=None, null=True)
     active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -59,3 +55,15 @@ class Account(AbstractBaseUser, PermissionsMixin):
         active = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
         self.active = active
         self.last_seen = None if active else timezone.now()
+
+    @property
+    def is_superuser(self):
+        return self.is_admin
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+
+    @property
+    def is_active(self):
+        return True
