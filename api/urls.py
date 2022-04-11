@@ -14,6 +14,7 @@ router.registry.extend(account_router.registry)
 urlpatterns = [
     *router.urls,
     path('', include('room.urls')),
+    path('', include('permit.urls')),
 ]
 
 ws_urlpatterns = [

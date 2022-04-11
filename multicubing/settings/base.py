@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'channels_presence',
     'scheduler',
     'account',
+    'permit',
     'cube',
     'room',
     'index',

@@ -1,12 +1,11 @@
 from django.urls import path
 
 from . import consumers
-from .views import RoomsView, RoomView, PermitsView
+from .views import RoomsView, RoomView
 
 urlpatterns = [
     path('rooms/', RoomsView.as_view()),
     path('rooms/<room_slug>/', RoomView.as_view()),
-    path('rooms/<room_slug>/permit/', PermitsView.as_view()),
 ]
 
 ws_urlpatterns = [

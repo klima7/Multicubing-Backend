@@ -51,7 +51,3 @@ class RoomReadSerializer(serializers.ModelSerializer):
         if room is None:
             return 0
         return len(room.get_users())
-
-
-class PermitSerializer(serializers.Serializer):
-    password = serializers.CharField(max_length=25)
