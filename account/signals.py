@@ -15,7 +15,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 @receiver(presence_changed)
-def update_active(sender, room, added, removed, bulk_change, **kwargs):
+def update_last_seen(sender, room, added, removed, bulk_change, **kwargs):
     match = re.match('^account.(.*)$', room.channel_name)
     if not match:
         return
@@ -25,5 +25,5 @@ def update_active(sender, room, added, removed, bulk_change, **kwargs):
     if account is None:
         return
 
-    account.update_active()
+    account.update_last_seen()
     account.save()

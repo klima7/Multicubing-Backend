@@ -40,7 +40,6 @@ class Account(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(verbose_name='date joined', default=timezone.now)
     last_seen = models.DateTimeField(verbose_name='last seen', default=None, null=True)
-    active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
@@ -51,10 +50,9 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.email
 
-    def update_active(self):
-        active = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
-        self.active = active
-        self.last_seen = None if active else timezone.now()
+    def update_last_seen(self):
+        present = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
+        self.last_seen = None if present else timezone.now()
 
     @property
     def is_superuser(self):
@@ -67,6 +65,10 @@ class Account(AbstractBaseUser):
     @property
     def is_active(self):
         return True
+
+    @property
+    def is_present(self):
+        return self.last_seen is None
 
     def get_user_permissions(self, obj=None):
         return []
