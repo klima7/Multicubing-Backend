@@ -30,13 +30,13 @@ def detect_connected_users_changed(sender, room, added, removed, bulk_change, **
 
 
 @receiver(post_save, sender=Account)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
+def on_account_creation_create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
 
 @receiver(connected_users_changed)
-def on_connected_users_changed(sender, connected, disconnected, bulk_change, **kwargs):
+def on_connected_users_changed_update_last_seen(sender, connected, disconnected, bulk_change, **kwargs):
     account = connected if connected else disconnected
     if account:
         account.update_last_seen()

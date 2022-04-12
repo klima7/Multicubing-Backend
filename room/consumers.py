@@ -37,7 +37,7 @@ class RoomConsumer(JsonWebsocketConsumer):
     def users_delete(self, event):
         data = {
             'type': 'users.delete',
-            'user': event['username']
+            'username': event['username']
         }
         self.send_json(data)
 
