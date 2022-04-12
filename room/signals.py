@@ -1,3 +1,5 @@
+import re
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from channels_presence.signals import presence_changed
@@ -10,18 +12,22 @@ from .serializers import RoomsReadSerializer
 
 
 @receiver(save_done, sender=Room)
-def notify_room_update(sender, old, new, **kwargs):
+def on_room_update(sender, old, new, **kwargs):
     send_room_updated(new.slug)
 
 
 @receiver(post_delete, sender=Room)
-def notify_room_delete(sender, instance, **kwargs):
+def on_room_delete(sender, instance, **kwargs):
     send_room_deleted(instance.slug)
 
 
 @receiver(presence_changed)
-def presence_changed(sender, room, added, removed, bulk_change, **kwargs):
-    room_slug = room.channel_name.rsplit(sep='.', maxsplit=1)[-1]
+def on_room_users_change(sender, room, added, removed, bulk_change, **kwargs):
+    match = re.match(r'^rooms\.(.*)$', room.channel_name)
+    if not match:
+        return
+    room_slug = match.groups()[0]
+
     if added or removed:
         send_room_updated(room_slug)
     elif bulk_change:

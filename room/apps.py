@@ -7,4 +7,4 @@ class RoomConfig(AppConfig):
 
     def ready(self):
         # noinspection PyUnresolvedReferences
-        from .signals import notify_room_update
+        from .signals import on_room_update
