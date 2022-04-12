@@ -20,7 +20,7 @@ def notify_room_delete(sender, instance, **kwargs):
 
 
 @receiver(presence_changed)
-def broadcast_presence(sender, room, added, removed, bulk_change, **kwargs):
+def presence_changed(sender, room, added, removed, bulk_change, **kwargs):
     room_slug = room.channel_name.rsplit(sep='.', maxsplit=1)[-1]
     if added or removed:
         send_room_updated(room_slug)
