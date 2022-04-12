@@ -9,7 +9,7 @@ class AccountConfig(AppConfig):
     def ready(self):
         schedule.every(10).seconds.do(_presence_pruning_task)
         # noinspection PyUnresolvedReferences
-        from .signals import create_auth_token, on_user_login
+        from .signals import create_auth_token, on_connected_users_changed
 
 
 def _presence_pruning_task():

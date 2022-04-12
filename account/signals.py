@@ -1,6 +1,7 @@
 import re
 
 from channels_presence.signals import presence_changed
+import django
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -8,14 +9,11 @@ from rest_framework.authtoken.models import Token
 from .models import Account
 
 
-@receiver(post_save, sender=Account)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+connected_users_changed = django.dispatch.Signal()
 
 
 @receiver(presence_changed)
-def on_user_login(sender, room, added, removed, bulk_change, **kwargs):
+def detect_connected_users_changed(sender, room, added, removed, bulk_change, **kwargs):
     match = re.match(r'^account\.(.*)$', room.channel_name)
     if not match:
         return
@@ -25,5 +23,21 @@ def on_user_login(sender, room, added, removed, bulk_change, **kwargs):
     if account is None:
         return
 
-    account.update_last_seen()
-    account.save()
+    new_added = account if added else None
+    new_removed = account if removed else None
+
+    connected_users_changed.send(sender=sender, connected=new_added, disconnected=new_removed, bulk_change=bulk_change)
+
+
+@receiver(post_save, sender=Account)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+@receiver(connected_users_changed)
+def on_connected_users_changed(sender, connected, disconnected, bulk_change, **kwargs):
+    account = connected if connected else disconnected
+    if account:
+        account.update_last_seen()
+        account.save()
