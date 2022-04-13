@@ -6,11 +6,11 @@ from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
 
 class PermitManager(models.Manager):
 
-    def check_permission(self, account, room, throw=False):
+    def check_permission(self, account, room, raise_exception=False):
         if account is None:
             raise AuthenticationFailed()
         permit = self.filter(room=room, account=account).first()
-        if throw and permit is None:
+        if raise_exception and permit is None:
             raise PermissionDenied()
         return permit is not None
 
