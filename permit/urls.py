@@ -3,5 +3,5 @@ from django.urls import path
 from .views import PermitsView
 
 urlpatterns = [
-    path('permits/<room_slug>/', PermitsView.as_view()),
+    path('rooms/<room_slug>/permits/', PermitsView.as_view()),
 ]
