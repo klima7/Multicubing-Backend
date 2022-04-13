@@ -15,6 +15,7 @@ urlpatterns = [
     *router.urls,
     path('', include('room.urls')),
     path('', include('permit.urls')),
+    path('', include('message.urls')),
 ]
 
 ws_urlpatterns = [
