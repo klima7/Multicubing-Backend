@@ -3,46 +3,8 @@ from channels_presence.decorators import touch_presence
 from channels_presence.models import Room
 
 from account.models import Account
-
-
-class UsersConsumerMixin:
-
-    def users_update(self, event):
-        data = {
-            'type': 'users.update',
-            'user': event['user']
-        }
-        self.send_json(data)
-
-    def users_delete(self, event):
-        data = {
-            'type': 'users.delete',
-            'username': event['username']
-        }
-        self.send_json(data)
-
-    def users_refresh(self, event):
-        data = {
-            'type': 'users.refresh',
-        }
-        self.send_json(data)
-
-
-class MessagesConsumerMixin:
-
-    def messages_update(self, event):
-        data = {
-            'type': 'messages.update',
-            'user': event['message']
-        }
-        self.send_json(data)
-
-    def messages_delete(self, event):
-        data = {
-            'type': 'messages.delete',
-            'id': event['id']
-        }
-        self.send_json(data)
+from message.consumers import MessagesConsumerMixin
+from account.consumers import UsersConsumerMixin
 
 
 class RoomConsumer(JsonWebsocketConsumer, UsersConsumerMixin, MessagesConsumerMixin):
