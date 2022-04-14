@@ -5,27 +5,7 @@ from channels_presence.models import Room
 from account.models import Account
 
 
-class RoomConsumer(JsonWebsocketConsumer):
-
-    def connect(self):
-        user = self.scope['user']
-        room_slug = self.scope['url_route']['kwargs']['room_slug']
-        authenticated = isinstance(user, Account)
-
-        if not authenticated:
-            self.close()
-
-        self.accept()
-
-        Room.objects.add(f'rooms.{room_slug}', self.channel_name, user)
-
-    def disconnect(self, close_code):
-        room_slug = self.scope['url_route']['kwargs']['room_slug']
-        Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
-
-    @touch_presence
-    def receive_json(self, content):
-        pass
+class UsersConsumerMixin:
 
     def users_update(self, event):
         data = {
@@ -33,7 +13,7 @@ class RoomConsumer(JsonWebsocketConsumer):
             'user': event['user']
         }
         self.send_json(data)
-        
+
     def users_delete(self, event):
         data = {
             'type': 'users.delete',
@@ -46,6 +26,45 @@ class RoomConsumer(JsonWebsocketConsumer):
             'type': 'users.refresh',
         }
         self.send_json(data)
+
+
+class MessagesConsumerMixin:
+
+    def messages_update(self, event):
+        data = {
+            'type': 'messages.update',
+            'user': event['message']
+        }
+        self.send_json(data)
+
+    def messages_delete(self, event):
+        data = {
+            'type': 'messages.delete',
+            'id': event['id']
+        }
+        self.send_json(data)
+
+
+class RoomConsumer(JsonWebsocketConsumer, UsersConsumerMixin, MessagesConsumerMixin):
+
+    def connect(self):
+        user = self.scope['user']
+        room_slug = self.scope['url_route']['kwargs']['room_slug']
+        authenticated = isinstance(user, Account)
+
+        if not authenticated:
+            self.close()
+
+        self.accept()
+        Room.objects.add(f'rooms.{room_slug}', self.channel_name, user)
+
+    def disconnect(self, close_code):
+        room_slug = self.scope['url_route']['kwargs']['room_slug']
+        Room.objects.remove(f'rooms.{room_slug}', self.channel_name)
+
+    @touch_presence
+    def receive_json(self, content):
+        pass
 
 
 class RoomsConsumer(JsonWebsocketConsumer):
