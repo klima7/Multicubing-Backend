@@ -3,7 +3,7 @@ class MessagesConsumerMixin:
     def messages_update(self, event):
         data = {
             'type': 'messages.update',
-            'user': event['message']
+            'message': event['message']
         }
         self.send_json(data)
 
