@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'channels',
-    'channels_presence',
+    'presence',
     'scheduler',
     'account',
     'permit',

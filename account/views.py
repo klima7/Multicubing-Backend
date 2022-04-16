@@ -4,7 +4,7 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from channels_presence.models import Room as PresenceRoom
+from presence.models import Room as PresenceRoom
 
 from multicubing.permissions import AuthenticatedExceptActions
 from .models import Account

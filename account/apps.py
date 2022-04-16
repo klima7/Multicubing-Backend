@@ -13,6 +13,6 @@ class AccountConfig(AppConfig):
 
 
 def _presence_pruning_task():
-    from channels_presence.tasks import prune_presence, prune_rooms
-    prune_presence()
-    prune_rooms()
+    from presence.models import Room
+    Room.objects.prune_rooms()
+    Room.objects.prune_presences()

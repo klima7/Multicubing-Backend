@@ -1,6 +1,6 @@
 import re
 
-from channels_presence.signals import presence_changed
+from presence.signals import presence_changed
 import django
 from django.db.models.signals import post_save
 from django.dispatch import receiver

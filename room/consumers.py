@@ -1,6 +1,6 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-from channels_presence.decorators import touch_presence
-from channels_presence.models import Room
+from presence.decorators import touch_presence
+from presence.models import Room
 
 from account.models import Account
 from message.consumers import MessagesConsumerMixin

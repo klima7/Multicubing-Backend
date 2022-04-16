@@ -1,4 +1,4 @@
-from channels_presence.models import Room as PresenceRoom
+from presence.models import Room as PresenceRoom
 from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 

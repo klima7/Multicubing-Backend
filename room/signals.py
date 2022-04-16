@@ -2,7 +2,7 @@ import re
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from channels_presence.signals import presence_changed
+from presence.signals import presence_changed
 import django
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -13,7 +13,11 @@ from .models import Room
 from .serializers import RoomsReadSerializer
 
 
+# room participants signals
 room_participants_changed = django.dispatch.Signal()
+room_participant_joined = django.dispatch.Signal()
+room_participant_left = django.dispatch.Signal()
+room_participants_bulk_change = django.dispatch.Signal()
 
 
 @receiver(presence_changed)
@@ -29,7 +33,14 @@ def detect_room_participants_changes(sender, room, added, removed, bulk_change, 
         added = added.user
     if removed:
         removed = removed.user
+
     room_participants_changed.send(sender=sender, room=real_room, added=added, removed=removed, bulk_change=bulk_change)
+    if added:
+        room_participant_joined.send(sender=sender, room=real_room, user=added)
+    if removed:
+        room_participant_left.send(sender=sender, room=real_room, user=removed)
+    if bulk_change:
+        room_participants_bulk_change.send(sender=sender)
 
 
 @receiver(room_participants_changed)
