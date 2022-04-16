@@ -23,4 +23,4 @@ class Room(SaveDoneSignalMixin, models.Model):
 
     @property
     def is_private(self):
-        return self.description is not None
+        return self.password is not None
