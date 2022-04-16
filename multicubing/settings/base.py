@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'permit',
     'cube',
     'room',
+    'participant',
     'message',
     'index',
     'docs',

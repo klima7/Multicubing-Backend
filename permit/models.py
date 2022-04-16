@@ -20,7 +20,7 @@ class PermitManager(models.Manager):
 class Permit(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    objects=PermitManager()
+    objects = PermitManager()
 
     def __str__(self):
         return f'{self.room.name} - {self.account.username}'
