@@ -12,3 +12,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participant
         fields = ['user', 'room', 'spectator']
+
+
+class ParticipantSerializerPatch(serializers.Serializer):
+    spectator = serializers.BooleanField()
