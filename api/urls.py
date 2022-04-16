@@ -16,6 +16,7 @@ urlpatterns = [
     path('', include('room.urls')),
     path('', include('permit.urls')),
     path('', include('message.urls')),
+    path('', include('participant.urls')),
 ]
 
 ws_urlpatterns = [
