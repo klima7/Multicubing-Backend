@@ -52,10 +52,6 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.email
 
-    def update_last_seen(self):
-        present = Presence.objects.filter(user=self, room__channel_name=f'account.{self.username}').first() is not None
-        self.last_seen = None if present else timezone.now()
-
     @property
     def last_login(self):
         return datetime.now()

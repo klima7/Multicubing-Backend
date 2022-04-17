@@ -19,7 +19,6 @@ __all__ = [
 room_connected = django.dispatch.Signal()
 room_disconnected = django.dispatch.Signal()
 
-
 room_first_connected = django.dispatch.Signal()
 room_last_disconnected = django.dispatch.Signal()
 
