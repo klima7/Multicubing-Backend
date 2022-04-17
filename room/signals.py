@@ -14,69 +14,58 @@ from .serializers import RoomsReadSerializer
 
 
 # room participants signals
-room_participants_changed = django.dispatch.Signal()
-room_participant_joined = django.dispatch.Signal()
-room_participant_left = django.dispatch.Signal()
+room_connected = django.dispatch.Signal()
+room_disconnected = django.dispatch.Signal()
 
 
 @receiver(presence_changed)
-def detect_room_participants_changes(sender, room, added, removed, **kwargs):
+def detect_room_connections(sender, room, added, removed, **kwargs):
+    # check if proper room
     match = re.match(r'^rooms\.(.*)$', room.channel_name)
     if not match:
         return
+
+    # get room
     room_slug = match.groups()[0]
     real_room = Room.objects.filter(slug=room_slug).first()
     if not real_room:
         return
+
+    # send specific signal
     if added:
-        added = added.user
+        room_connected.send(sender=sender, room=real_room, user=added.user)
     if removed:
-        removed = removed.user
-
-    room_participants_changed.send(sender=sender, room=real_room, added=added, removed=removed)
-    if added:
-        room_participant_joined.send(sender=sender, room=real_room, user=added)
-    if removed:
-        room_participant_left.send(sender=sender, room=real_room, user=removed)
+        room_disconnected.send(sender=sender, room=real_room, user=removed.user)
 
 
-@receiver(room_participants_changed)
-def on_room_participants_changed_send_room_notification(sender, room, added, removed, **kwargs):
-    if added or removed:
-        send_room_update(room.slug)
+@receiver((room_connected, room_disconnected))
+def on_connection_send_room_notification(sender, room, user, **kwargs):
+    send_room_update(room)
+
+
+@receiver(room_connected)
+def on_room_participants_changed_send_users_notifications(sender, room, user, **kwargs):
+    channel_name = f'rooms.{room.slug}'
+    serialized_user = AccountSerializer(user).data
+    async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.update', 'user': serialized_user})
+
+
+@receiver(room_disconnected)
+def on_room_participants_changed_send_users_notifications(sender, room, user, **kwargs):
+    channel_name = f'rooms.{room.slug}'
+    async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.delete', 'username': user.username})
 
 
 @receiver(save_done, sender=Room)
 def on_room_update_send_notification(sender, old, new, **kwargs):
-    send_room_update(new.slug)
+    send_room_update(new)
 
 
 @receiver(post_delete, sender=Room)
 def on_room_delete_send_notification(sender, instance, **kwargs):
-    send_room_delete(instance.slug)
+    async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.deleted', 'slug': instance.slug})
 
 
-def send_room_update(room_slug):
-    room = Room.objects.filter(slug=room_slug).first()
-    if room is None:
-        return
+def send_room_update(room):
     read_serializer = RoomsReadSerializer(room)
     async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.created', 'room': read_serializer.data})
-
-
-def send_room_delete(room_slug):
-    async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.deleted', 'slug': room_slug})
-
-
-def send_rooms_refresh():
-    async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.refresh'})
-
-
-@receiver(room_participants_changed)
-def on_room_participants_changed_send_users_notifications(sender, room, added, removed, **kwargs):
-    channel_name = f'rooms.{room.slug}'
-    if added:
-        serialized_user = AccountSerializer(added).data
-        async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.update', 'user': serialized_user})
-    if removed:
-        async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.delete', 'username': removed.username})

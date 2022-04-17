@@ -9,8 +9,8 @@ from rest_framework.authtoken.models import Token
 from .models import Account
 
 
-user_connected = django.dispatch.Signal()
-user_disconnected = django.dispatch.Signal()
+account_connected = django.dispatch.Signal()
+account_disconnected = django.dispatch.Signal()
 
 
 @receiver(presence_changed)
@@ -28,19 +28,19 @@ def detect_connected_users_changed(sender, room, added, removed, **kwargs):
 
     # send specific signals
     if added:
-        user_connected.send(sender=sender, user=account)
+        account_connected.send(sender=sender, user=account)
     if removed:
-        user_disconnected.send(sender=sender, user=account)
+        account_disconnected.send(sender=sender, user=account)
 
 
-@receiver(user_connected)
-def on_user_connected_update_last_seen(sender, user, **kwargs):
+@receiver(account_connected)
+def on_account_connected_update_last_seen(sender, user, **kwargs):
     user.update_last_seen()
     user.save()
 
 
-@receiver(user_disconnected)
-def on_user_disconnected_update_last_seen(sender, user, **kwargs):
+@receiver(account_disconnected)
+def on_account_disconnected_update_last_seen(sender, user, **kwargs):
     user.update_last_seen()
     user.save()
 
