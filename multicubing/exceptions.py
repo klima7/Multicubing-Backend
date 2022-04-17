@@ -7,7 +7,6 @@ from api.utils import ErrorResponse
 
 
 def custom_exception_handler(exc, context):
-    print(type(exc), exc)
     if isinstance(exc, ValidationError):
         return ErrorResponse(
             status=status.HTTP_400_BAD_REQUEST,

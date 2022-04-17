@@ -102,11 +102,12 @@ class Room(models.Model):
         if age_in_seconds is None:
             age_in_seconds = getattr(settings, "CHANNELS_PRESENCE_MAX_AGE", 60)
 
-        num_deleted, num_per_type = Presence.objects.filter(
+        presences = Presence.objects.filter(
             room=self, last_seen__lt=now() - timedelta(seconds=age_in_seconds)
-        ).delete()
-        if num_deleted > 0:
-            self.broadcast_changed(bulk_change=True)
+        ).all()
+        for presence in presences:
+            presence.delete()
+            self.broadcast_changed(removed=presence)
 
     def get_users(self):
         User = get_user_model()
@@ -119,11 +120,10 @@ class Room(models.Model):
         return self.presence_set.count()
     get_users_count.short_description = 'Users count'
 
-    def broadcast_changed(self, added=None, removed=None, bulk_change=False):
+    def broadcast_changed(self, added=None, removed=None):
         presence_changed.send(
             sender=self.__class__,
             room=self,
             added=added,
             removed=removed,
-            bulk_change=bulk_change,
         )

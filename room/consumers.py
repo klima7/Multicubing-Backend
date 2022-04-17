@@ -62,9 +62,3 @@ class RoomsConsumer(JsonWebsocketConsumer):
             'slug': event['slug']
         }
         self.send_json(data)
-
-    def rooms_refresh(self, event):
-        data = {
-            'type': 'rooms.refresh',
-        }
-        self.send_json(data)

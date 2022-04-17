@@ -42,9 +42,3 @@ class UsersConsumerMixin:
             'username': event['username']
         }
         self.send_json(data)
-
-    def users_refresh(self, event):
-        data = {
-            'type': 'users.refresh',
-        }
-        self.send_json(data)

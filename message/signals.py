@@ -20,7 +20,6 @@ def on_message_delete_send_notification(sender, instance, **kwargs):
 
 def send_message_update(message):
     read_serializer = MessageReadSerializer(message)
-    print(f'rooms.{message.room}', read_serializer.data)
     async_to_sync(get_channel_layer().group_send)(f'rooms.{message.room.slug}', {'type': 'messages.update', 'message': read_serializer.data})
 
 
