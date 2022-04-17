@@ -4,6 +4,7 @@ import django
 from django.dispatch import receiver
 
 from presence.signals import presence_changed
+from presence.models import Presence
 from .models import Room
 
 
@@ -38,6 +39,12 @@ def detect_room_connections(sender, room, added, removed, **kwargs):
 
     # send specific signal
     if added:
+        presences_count = Presence.objects.filter(user=added.user, room=room).count()
+        if presences_count == 1:
+            room_first_connected.send(sender=sender, room=real_room, user=added.user)
         room_connected.send(sender=sender, room=real_room, user=added.user)
     if removed:
+        presences_count = Presence.objects.filter(user=removed.user, room=room).count()
+        if presences_count == 0:
+            room_last_disconnected.send(sender=sender, room=real_room, user=removed.user)
         room_disconnected.send(sender=sender, room=real_room, user=removed.user)
