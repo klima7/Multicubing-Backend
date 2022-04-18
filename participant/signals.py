@@ -1,7 +1,10 @@
-from .signals_def import *
 from django.dispatch import receiver
+
+from .models import Participant
+from .signals_def import *
 
 
 @receiver(room_connected_without_participant)
-def a(sender, room, user, **kwargs):
-    print(f'Connected without participant! {user}; {room}')
+def create_participant_when_needed(sender, room, user, **kwargs):
+    participant = Participant(user=user, room=room)
+    participant.save()
