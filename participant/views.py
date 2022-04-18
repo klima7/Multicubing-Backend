@@ -15,7 +15,7 @@ class ParticipantsView(APIView):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
 
-        participants = room.participant_set.all()
+        participants = Participant.objects.filter(room=room, active=True).all()
         serializer = ParticipantSerializer(participants, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -26,7 +26,7 @@ class ParticipantView(APIView):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
 
-        participant = get_object_or_404(Participant, room=room, user__username=username)
+        participant = get_object_or_404(Participant, active=True, room=room, user__username=username)
         serializer = ParticipantSerializer(participant)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -36,7 +36,7 @@ class ParticipantView(APIView):
         Permit.objects.check_permission(request.user, room, raise_exception=True)
 
         # get participant
-        participant = get_object_or_404(Participant, room=room, user__username=username)
+        participant = get_object_or_404(Participant, active=True, room=room, user__username=username)
 
         # parse request data
         serializer_patch = ParticipantSerializerPatch(data=request.data)

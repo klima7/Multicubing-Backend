@@ -100,6 +100,8 @@ TIME_ZONE = 'Europe/Warsaw'
 
 AUTH_USER_MODEL = 'account.Account'
 
+PRESENCE_MAX_AGE = 20
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',

@@ -8,6 +8,7 @@ class Participant(models.Model):
 
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    active = models.BooleanField(default=False)
     spectator = models.BooleanField(default=False)
 
     def __str__(self):

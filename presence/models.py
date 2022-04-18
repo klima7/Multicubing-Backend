@@ -100,7 +100,7 @@ class Room(models.Model):
 
     def prune_presences(self, age_in_seconds=None):
         if age_in_seconds is None:
-            age_in_seconds = getattr(settings, "CHANNELS_PRESENCE_MAX_AGE", 60)
+            age_in_seconds = getattr(settings, "PRESENCE_MAX_AGE", 60)
 
         presences = Presence.objects.filter(
             room=self, last_seen__lt=now() - timedelta(seconds=age_in_seconds)

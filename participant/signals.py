@@ -1,10 +1,15 @@
 from django.dispatch import receiver
 
-from .models import Participant
 from .signals_def import *
 
 
-@receiver(room_connected_without_participant)
-def create_participant_when_needed(sender, room, user, **kwargs):
-    participant = Participant(user=user, room=room)
+@receiver(participant_first_connected)
+def make_participant_active(sender, room, participant, **kwargs):
+    participant.active = True
+    participant.save()
+
+
+@receiver(participant_last_disconnected)
+def make_participant_inactive(sender, room, participant, **kwargs):
+    participant.active = False
     participant.save()
