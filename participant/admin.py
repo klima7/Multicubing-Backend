@@ -4,7 +4,7 @@ from .models import Participant
 
 
 class ParticipantAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'spectator')
+    list_display = ('__str__', 'user', 'room', 'spectator')
 
 
 admin.site.register(Participant, ParticipantAdmin)
