@@ -1,6 +1,8 @@
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from cube.models import Cube
 from multicubing.signals import SaveDoneSignalMixin
@@ -24,3 +26,10 @@ class Room(SaveDoneSignalMixin, models.Model):
     @property
     def is_private(self):
         return self.password is not None
+
+    @property
+    def channel_name(self):
+        return f'rooms.{self.slug}'
+
+    def send(self, data):
+        async_to_sync(get_channel_layer().group_send)(self.channel_name, data)

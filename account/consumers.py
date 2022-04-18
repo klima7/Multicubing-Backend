@@ -25,20 +25,3 @@ class AccountConsumer(JsonWebsocketConsumer):
     @touch_presence
     def receive_json(self, content):
         pass
-
-
-class UsersConsumerMixin:
-
-    def users_update(self, event):
-        data = {
-            'type': 'users.update',
-            'user': event['user']
-        }
-        self.send_json(data)
-
-    def users_delete(self, event):
-        data = {
-            'type': 'users.delete',
-            'username': event['username']
-        }
-        self.send_json(data)

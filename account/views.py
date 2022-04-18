@@ -4,15 +4,13 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from presence.models import Room as PresenceRoom
 
 from multicubing.permissions import AuthenticatedExceptActions
 from .models import Account
-from room.models import Room
 from .serializers import AccountSerializer, RegisterSerializer, LoginSerializer
 
 
-class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin):
+class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     serializer_class = AccountSerializer
     queryset = Account.objects.all()
     lookup_field = 'username'
@@ -26,16 +24,6 @@ class AccountViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.
         obj = get_object_or_404(queryset, username=username)
         self.check_object_permissions(self.request, obj)
         return obj
-
-    def get_queryset(self):
-        params = self.request.query_params
-        if 'room' in params:
-            get_object_or_404(Room, slug=params['room'])
-            presence_room = PresenceRoom.objects.filter(channel_name=f"rooms.{params['room']}").first()
-            qs = presence_room.get_users() if presence_room is not None else []
-        else:
-            qs = Account.objects.all()
-        return qs
 
     @swagger_auto_schema(request_body=RegisterSerializer, responses={201: None}, security=[])
     @action(detail=False, methods=['POST'])

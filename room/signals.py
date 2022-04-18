@@ -3,7 +3,6 @@ from channels.layers import get_channel_layer
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from account.serializers import AccountSerializer
 from multicubing.signals import save_done
 from .models import Room
 from .serializers import RoomsReadSerializer
@@ -13,19 +12,6 @@ from .signals_def import *
 @receiver((room_connected, room_disconnected))
 def on_connection_send_room_notification(sender, room, user, **kwargs):
     send_room_update(room)
-
-
-@receiver(room_connected)
-def on_room_connected_send_users_notifications(sender, room, user, **kwargs):
-    channel_name = f'rooms.{room.slug}'
-    serialized_user = AccountSerializer(user).data
-    async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.update', 'user': serialized_user})
-
-
-@receiver(room_disconnected)
-def on_room_disconnected_send_users_notifications(sender, room, user, **kwargs):
-    channel_name = f'rooms.{room.slug}'
-    async_to_sync(get_channel_layer().group_send)(channel_name, {'type': 'users.delete', 'username': user.username})
 
 
 @receiver(save_done, sender=Room)
