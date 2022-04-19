@@ -15,7 +15,7 @@ class RoomManager(models.Manager):
 
     def prune_inactive(self):
         Room.objects.filter(
-            last_activity__lt=now() - timedelta(seconds=60*5)
+            last_activity__lt=now() - timedelta(seconds=60*10)
         ).delete()
 
 

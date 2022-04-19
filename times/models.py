@@ -2,6 +2,7 @@ from django.db import models
 
 
 from room.models import Room
+from account.models import Account
 
 
 class Turn(models.Model):
@@ -16,7 +17,7 @@ class Turn(models.Model):
         ]
 
     def __str__(self):
-        return f'Turn(room={self.room}; number={self.number})'
+        return f'{self.room} | {self.number}'
 
 
 class Time(models.Model):
@@ -26,8 +27,9 @@ class Time(models.Model):
         PLUS2 = '+2', '+2'
 
     turn = models.ForeignKey(Turn, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     time = models.FloatField(null=True, blank=True, default=None)
     flag = models.TextField(choices=Flag.choices, null=True, blank=True, default=None)
 
     def __str__(self):
-        return f'Time({self.time}; turn={self.turn}; flag={self.flag})'
+        return f'{self.time} | {self.user} | {self.turn}'
