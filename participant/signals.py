@@ -1,5 +1,6 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils import timezone
 
 from .signals_def import *
 from .models import Participant
@@ -11,11 +12,21 @@ def make_participant_active(sender, room, participant, **kwargs):
     participant.active = True
     participant.save()
 
+    room = participant.room
+    room.last_activity = None
+    room.save()
+
 
 @receiver(participant_last_disconnected)
 def make_participant_inactive(sender, room, participant, **kwargs):
     participant.active = False
     participant.save()
+
+    room = participant.room
+    active_count = room.participant_set.filter(active=True).count()
+    if active_count == 0:
+        room.last_activity = timezone.now()
+        room.save()
 
 
 @receiver(participant_first_connected)

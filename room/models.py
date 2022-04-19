@@ -19,6 +19,7 @@ class Room(SaveDoneSignalMixin, models.Model):
     password = models.CharField(max_length=25, null=True, blank=True, validators=[MinLengthValidator(3)])
     cube = models.ForeignKey(Cube, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(verbose_name='Creation date', default=timezone.now, blank=True)
+    last_activity = models.DateTimeField(default=timezone.now, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -26,6 +27,10 @@ class Room(SaveDoneSignalMixin, models.Model):
     @property
     def is_private(self):
         return self.password is not None
+
+    @property
+    def is_active(self):
+        return self.last_activity is None
 
     @property
     def channel_name(self):
