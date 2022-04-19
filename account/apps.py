@@ -13,6 +13,9 @@ class AccountConfig(AppConfig):
 
 
 def _presence_pruning_task():
-    from presence.models import Room
-    Room.objects.prune_rooms()
-    Room.objects.prune_presences()
+    from presence.models import Room as PresenceRoom
+    PresenceRoom.objects.prune_rooms()
+    PresenceRoom.objects.prune_presences()
+
+    from room.models import Room
+    Room.objects.prune_inactive()

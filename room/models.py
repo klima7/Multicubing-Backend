@@ -1,17 +1,30 @@
+from datetime import timedelta
+
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.utils.timezone import now
 
 from cube.models import Cube
 from multicubing.signals import SaveDoneSignalMixin
+
+
+class RoomManager(models.Manager):
+
+    def prune_inactive(self):
+        Room.objects.filter(
+            last_activity__lt=now() - timedelta(seconds=60*5)
+        ).delete()
 
 
 class Room(SaveDoneSignalMixin, models.Model):
 
     class Meta:
         ordering = ('creation_date',)
+
+    objects = RoomManager()
 
     name = models.CharField(max_length=25, unique=True, validators=[MinLengthValidator(3)])
     slug = models.SlugField(unique=True, blank=True)
