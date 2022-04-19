@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'room',
     'participant',
     'message',
+    'times',
     'index',
     'docs',
     'api',
