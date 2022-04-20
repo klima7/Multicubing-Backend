@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Time
+from .models import Turn, Time
 from .serializers import TurnSerializer, TimeSerializer
 from room.models import Room
 from permit.models import Permit
@@ -28,4 +28,15 @@ class TurnsView(APIView):
 
         turns = room.turn_set.all()
         serializer = TurnSerializer(turns, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TurnView(APIView):
+
+    def get(self, request, room_slug, turn_number):
+        room = get_object_or_404(Room, slug=room_slug)
+        Permit.objects.check_permission(request.user, room, raise_exception=True)
+
+        turn = get_object_or_404(Turn, room=room, number=turn_number)
+        serializer = TurnSerializer(turn)
         return Response(serializer.data, status=status.HTTP_200_OK)
