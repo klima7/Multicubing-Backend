@@ -23,3 +23,9 @@ class TimeSerializer(serializers.ModelSerializer):
 
     def get_turn(self, time):
         return time.turn.number
+
+
+class TimesViewQueryParams(serializers.Serializer):
+
+    turn = serializers.IntegerField(required=False)
+    username = serializers.ListField(child=serializers.CharField(), required=False)

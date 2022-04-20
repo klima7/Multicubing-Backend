@@ -11,7 +11,7 @@ def custom_exception_handler(exc, context):
         return ErrorResponse(
             status=status.HTTP_400_BAD_REQUEST,
             error='invalid-data',
-            details=exc.args[0]
+            details=exc.args[0] if exc.args else None
         )
     elif isinstance(exc, NotAuthenticated):
         return ErrorResponse(
