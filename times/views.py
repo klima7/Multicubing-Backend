@@ -32,6 +32,17 @@ class NestedTimesView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class NestedTimeView(APIView):
+
+    def get(self, request, room_slug, turn_number, username):
+        room = get_object_or_404(Room, slug=room_slug)
+        Permit.objects.check_permission(request.user, room, raise_exception=True)
+
+        time = get_object_or_404(Time, turn__room=room, turn__number=turn_number, user__username=username)
+        serializer = TimeSerializer(time)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class TurnsView(APIView):
 
     def get(self, request, room_slug):
