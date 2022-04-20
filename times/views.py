@@ -7,10 +7,12 @@ from .models import Turn, Time
 from .serializers import TurnSerializer, TimeSerializer
 from room.models import Room
 from permit.models import Permit
+from drf_yasg.utils import swagger_auto_schema
 
 
 class TimesView(APIView):
 
+    @swagger_auto_schema(tags=['times'])
     def get(self, request, room_slug):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
@@ -22,6 +24,7 @@ class TimesView(APIView):
 
 class NestedTimesView(APIView):
 
+    @swagger_auto_schema(tags=['times'])
     def get(self, request, room_slug, turn_number):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
@@ -34,6 +37,7 @@ class NestedTimesView(APIView):
 
 class NestedTimeView(APIView):
 
+    @swagger_auto_schema(tags=['times'])
     def get(self, request, room_slug, turn_number, username):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
@@ -45,6 +49,7 @@ class NestedTimeView(APIView):
 
 class TurnsView(APIView):
 
+    @swagger_auto_schema(tags=['turns'])
     def get(self, request, room_slug):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)
@@ -56,6 +61,7 @@ class TurnsView(APIView):
 
 class TurnView(APIView):
 
+    @swagger_auto_schema(tags=['turns'])
     def get(self, request, room_slug, turn_number):
         room = get_object_or_404(Room, slug=room_slug)
         Permit.objects.check_permission(request.user, room, raise_exception=True)

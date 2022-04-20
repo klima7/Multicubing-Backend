@@ -11,6 +11,7 @@ from .serializers import PermitSerializer
 
 class PermitsView(APIView):
 
+    @swagger_auto_schema(tags=['permits'])
     def get(self, request, room_slug):
         permit = True
         account = request.user
@@ -19,7 +20,7 @@ class PermitsView(APIView):
             permit = Permit.objects.filter(account=account, room__slug=room_slug).first() is not None
         return Response({'permit': permit}, status=status.HTTP_200_OK)
 
-    @swagger_auto_schema(request_body=PermitSerializer)
+    @swagger_auto_schema(tags=['permits'], request_body=PermitSerializer)
     def post(self, request, room_slug):
         room = get_object_or_404(Room, slug=room_slug)
         serializer = PermitSerializer(data=request.data)

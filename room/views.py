@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from django.utils.text import slugify
 from rest_framework import status
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from .serializers import RoomCreateSerializer, RoomsReadSerializer, RoomReadSeri
 
 class RoomsView(APIView):
 
+    @swagger_auto_schema(tags=['rooms'])
     def post(self, request):
         serializer = RoomCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -27,6 +29,7 @@ class RoomsView(APIView):
         read_serializer = RoomsReadSerializer(room)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)
 
+    @swagger_auto_schema(tags=['rooms'])
     def get(self, request):
         rooms = Room.objects.all()
         serializer = RoomsReadSerializer(rooms, many=True)
@@ -35,6 +38,7 @@ class RoomsView(APIView):
 
 class RoomView(APIView):
 
+    @swagger_auto_schema(tags=['rooms'])
     def get(self, request, room_slug):
         room = get_object_or_404(Room, slug=room_slug)
         serializer = RoomReadSerializer(room)
