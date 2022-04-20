@@ -17,6 +17,7 @@ urlpatterns = [
     path('', include('permit.urls')),
     path('', include('message.urls')),
     path('', include('participant.urls')),
+    path('', include('times.urls')),
 ]
 
 ws_urlpatterns = [
