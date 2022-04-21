@@ -25,6 +25,7 @@ class RoomsView(APIView):
         cube = Cube.objects.get(identifier=data['cube'])
         room = Room(name=data['name'], description=data['description'], slug=slug, password=data['password'], cube=cube)
         room.save()
+        room.notify_update()
 
         read_serializer = RoomsReadSerializer(room)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)

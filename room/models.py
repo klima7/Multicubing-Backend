@@ -51,3 +51,11 @@ class Room(SaveDoneSignalMixin, models.Model):
 
     def send(self, data):
         async_to_sync(get_channel_layer().group_send)(self.channel_name, data)
+
+    def notify_delete(self):
+        async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.deleted', 'slug': self.slug})
+
+    def notify_update(self):
+        from .serializers import RoomsReadSerializer
+        read_serializer = RoomsReadSerializer(self)
+        async_to_sync(get_channel_layer().group_send)('rooms', {'type': 'rooms.created', 'room': read_serializer.data})

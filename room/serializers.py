@@ -2,8 +2,8 @@ from presence.models import Room as PresenceRoom
 from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 
-from cube.validators import CubeValidator
 from .models import Room
+from cube.validators import CubeValidator
 
 
 class RoomCreateSerializer(serializers.Serializer):
