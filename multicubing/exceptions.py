@@ -11,27 +11,32 @@ def custom_exception_handler(exc, context):
         return ErrorResponse(
             status=status.HTTP_400_BAD_REQUEST,
             error='invalid-data',
-            details=exc.args[0] if exc.args else None
+            details=exc.args[0] if exc.args else None,
+            message=exc.detail
         )
     elif isinstance(exc, NotAuthenticated):
         return ErrorResponse(
             status=status.HTTP_401_UNAUTHORIZED,
             error='not-authenticated',
+            message=exc.detail
         )
     elif isinstance(exc, AuthenticationFailed):
         return ErrorResponse(
             status=status.HTTP_401_UNAUTHORIZED,
             error='authentication-failure',
+            message=exc.detail
         )
     elif isinstance(exc, PermissionDenied):
         return ErrorResponse(
             status=status.HTTP_403_FORBIDDEN,
             error='permission-denied',
+            message=exc.detail
         )
     elif isinstance(exc, Http404):
         return ErrorResponse(
             status=status.HTTP_404_NOT_FOUND,
             error='not-found',
+            message='Requested resource not found'
         )
     return None
 
