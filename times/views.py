@@ -2,13 +2,14 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
+from drf_yasg.utils import swagger_auto_schema
 
 from .models import Turn, Time
-from .serializers import TurnSerializer, TimeSerializer, TimesViewQueryParams
+from .serializers import TurnSerializer, TimeSerializer, TimesViewQueryParams, TimePutSerializer
 from room.models import Room
 from permit.models import Permit
-from drf_yasg.utils import swagger_auto_schema
+from account.models import Account
 
 
 class TimesView(APIView):
@@ -59,6 +60,22 @@ class NestedTimeView(APIView):
         time = get_object_or_404(Time, turn__room=room, turn__number=turn_number, user__username=username)
         serializer = TimeSerializer(time)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(tags=['times'], request_body=TimePutSerializer)
+    def put(self, request, room_slug, turn_number, username):
+        room = get_object_or_404(Room, slug=room_slug)
+        Permit.objects.check_permission(request.user, room, raise_exception=True)
+
+        if request.user.username != username:
+            raise PermissionDenied('No permission to add time as requested user')
+
+        serializer = TimePutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        turn = get_object_or_404(Turn, number=turn_number)
+        time = serializer.save(user=request.user, turn=turn)
+
+        serializer = TimeSerializer(time)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class TurnsView(APIView):

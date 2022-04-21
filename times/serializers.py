@@ -25,6 +25,21 @@ class TimeSerializer(serializers.ModelSerializer):
         return time.turn.number
 
 
+class TimePutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Time
+        fields = ('time', 'flag')
+
+    def create(self, validated_data):
+        return Time.objects.create(
+            turn=validated_data['turn'],
+            user=validated_data['user'],
+            time=validated_data['time'],
+            flag=validated_data['flag'],
+        )
+
+
 class TimesViewQueryParams(serializers.Serializer):
 
     turn = serializers.IntegerField(required=False)
