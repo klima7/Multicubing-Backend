@@ -50,7 +50,9 @@ class ParticipantView(APIView):
         # perform updates
         if vd['spectator'] is not None:
             participant.spectator = vd['spectator']
+
         participant.save()
+        participant.notify_update()
 
         # return new participant
         serializer = ParticipantSerializer(participant)
