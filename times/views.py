@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ValidationError, PermissionDenied
+from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 from drf_yasg.utils import swagger_auto_schema
 
 from .models import Turn, Time
@@ -98,5 +98,19 @@ class TurnView(APIView):
         Permit.objects.check_permission(request.user, room, raise_exception=True)
 
         turn = get_object_or_404(Turn, room=room, number=turn_number)
+        serializer = TurnSerializer(turn)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class LastTurnView(APIView):
+
+    @swagger_auto_schema(tags=['turns'])
+    def get(self, request, room_slug):
+        room = get_object_or_404(Room, slug=room_slug)
+        Permit.objects.check_permission(request.user, room, raise_exception=True)
+
+        turn = Turn.objects.filter(room=room).order_by('-number').first()
+        if turn is None:
+            raise NotFound()
         serializer = TurnSerializer(turn)
         return Response(serializer.data, status=status.HTTP_200_OK)
