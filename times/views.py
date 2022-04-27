@@ -10,7 +10,6 @@ from .serializers import TurnSerializer, TimeSerializer, TimesViewQueryParams, T
 from .actions import start_new_turn_if_needed
 from room.models import Room
 from permit.models import Permit
-from account.models import Account
 
 
 class TimesView(APIView):
@@ -75,6 +74,7 @@ class NestedTimeView(APIView):
         turn = get_object_or_404(Turn, number=turn_number)
         time = serializer.save(user=request.user, turn=turn)
 
+        time.notify_update()
         start_new_turn_if_needed(room)
 
         serializer = TimeSerializer(time)

@@ -5,10 +5,11 @@ from presence.models import Room
 from account.models import Account
 from message.consumers import MessagesConsumerMixin
 from participant.consumers import ParticipantsConsumerMixin
-from times.consumers import TurnsConsumerMixin
+from times.consumers import TurnsConsumerMixin, TimesConsumerMixin
 
 
-class RoomConsumer(JsonWebsocketConsumer, MessagesConsumerMixin, ParticipantsConsumerMixin, TurnsConsumerMixin):
+class RoomConsumer(JsonWebsocketConsumer, MessagesConsumerMixin, ParticipantsConsumerMixin,
+                   TurnsConsumerMixin, TimesConsumerMixin):
 
     def connect(self):
         user = self.scope['user']
