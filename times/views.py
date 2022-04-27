@@ -7,6 +7,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from .models import Turn, Time
 from .serializers import TurnSerializer, TimeSerializer, TimesViewQueryParams, TimePutSerializer
+from .actions import start_new_turn_if_needed
 from room.models import Room
 from permit.models import Permit
 from account.models import Account
@@ -73,6 +74,8 @@ class NestedTimeView(APIView):
         serializer.is_valid(raise_exception=True)
         turn = get_object_or_404(Turn, number=turn_number)
         time = serializer.save(user=request.user, turn=turn)
+
+        start_new_turn_if_needed(room)
 
         serializer = TimeSerializer(time)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

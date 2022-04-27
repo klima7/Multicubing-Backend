@@ -49,6 +49,10 @@ class Room(SaveDoneSignalMixin, models.Model):
     def channel_name(self):
         return f'rooms.{self.slug}'
 
+    @property
+    def last_turn(self):
+        return self.turn_set.order_by('-number').first()
+
     def send(self, data):
         async_to_sync(get_channel_layer().group_send)(self.channel_name, data)
 

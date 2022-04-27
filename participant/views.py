@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from permit.models import Permit
 from room.models import Room
+from times.actions import start_new_turn_if_needed
 from .serializers import ParticipantSerializer, ParticipantSerializerPatch
 from .models import Participant
 
@@ -53,6 +54,8 @@ class ParticipantView(APIView):
 
         participant.save()
         participant.notify_update()
+
+        start_new_turn_if_needed(participant.room)
 
         # return new participant
         serializer = ParticipantSerializer(participant)
