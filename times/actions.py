@@ -25,3 +25,4 @@ def _start_new_turn(room: Room):
     last_number = last_turn.number if last_turn else 0
     new_turn = Turn(room=room, number=last_number+1, scramble='Some scramble')
     new_turn.save()
+    new_turn.notify_update()

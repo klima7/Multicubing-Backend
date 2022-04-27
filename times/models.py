@@ -1,5 +1,6 @@
 from django.db import models
-
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from room.models import Room
 from account.models import Account
@@ -18,6 +19,11 @@ class Turn(models.Model):
 
     def __str__(self):
         return f'{self.room} | {self.number}'
+
+    def notify_update(self):
+        from .serializers import TurnSerializer
+        serializer = TurnSerializer(self)
+        self.room.send({'type': 'turns.update', 'turn': serializer.data})
 
 
 class Time(models.Model):
