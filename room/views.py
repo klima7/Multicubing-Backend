@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from api.utils import ErrorResponse
 from cube.models import Cube
+from times.actions import start_new_turn
 from .models import Room
 from .serializers import RoomCreateSerializer, RoomsReadSerializer, RoomReadSerializer
 
@@ -26,6 +27,8 @@ class RoomsView(APIView):
         room = Room(name=data['name'], description=data['description'], slug=slug, password=data['password'], cube=cube)
         room.save()
         room.notify_update()
+
+        start_new_turn(room)
 
         read_serializer = RoomsReadSerializer(room)
         return Response(read_serializer.data, status=status.HTTP_201_CREATED)

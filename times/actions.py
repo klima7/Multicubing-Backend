@@ -5,7 +5,7 @@ from room.models import Room
 def start_new_turn_if_needed(room: Room):
     if _check_new_turn_needed(room):
         print('Starting turn')
-        _start_new_turn(room)
+        start_new_turn(room)
 
 
 def _check_new_turn_needed(room: Room):
@@ -20,7 +20,7 @@ def _check_new_turn_needed(room: Room):
     return True
 
 
-def _start_new_turn(room: Room):
+def start_new_turn(room: Room):
     last_turn = room.last_turn
     last_number = last_turn.number if last_turn else 0
     new_turn = Turn(room=room, number=last_number+1, scramble='Some scramble')
