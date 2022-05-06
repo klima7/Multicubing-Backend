@@ -71,7 +71,7 @@ class NestedTimeView(APIView):
 
         serializer = TimePutSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        turn = get_object_or_404(Turn, number=turn_number)
+        turn = get_object_or_404(Turn, number=turn_number, room=room)
         time = serializer.save(user=request.user, turn=turn)
 
         time.notify_update()
